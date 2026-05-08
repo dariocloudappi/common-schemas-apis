@@ -1,0 +1,108 @@
+openapi: "3.0.3"
+info:
+  title: Product Models
+  description: >
+    Modelos del dominio de productos.
+    Referencia a common-responses para la estructura de respuestas paginadas.
+    Subir a Apicurio como: grupo=domain, artifactId=product-models
+    Dependencias: common/common-responses (registrar como referencia en la subida)
+  version: "1.0.0"
+paths: {}
+components:
+  schemas:
+
+    Category:
+      type: object
+      description: Categoría a la que pertenece un producto
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          description: Identificador único de la categoría
+          example: "electronics"
+        name:
+          type: string
+          description: Nombre descriptivo de la categoría
+          example: "Electrónica"
+        parentId:
+          type: string
+          description: ID de la categoría padre (null si es categoría raíz)
+          example: "tech"
+
+    Product:
+      type: object
+      description: Recurso principal del dominio de productos
+      required:
+        - id
+        - name
+        - price
+        - currency
+        - status
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Identificador único del producto
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        name:
+          type: string
+          minLength: 1
+          maxLength: 200
+          description: Nombre del producto
+          example: "Laptop Pro 15"
+        description:
+          type: string
+          maxLength: 2000
+          description: Descripción detallada del producto
+          example: "Portátil de alto rendimiento con procesador Intel i9"
+        price:
+          type: number
+          format: double
+          minimum: 0
+          description: Precio unitario del producto
+          example: 1299.99
+        currency:
+          type: string
+          minLength: 3
+          maxLength: 3
+          description: Código de moneda ISO 4217
+          default: "EUR"
+          example: "EUR"
+        status:
+          type: string
+          description: Estado actual del producto en el catálogo
+          enum:
+            - ACTIVE
+            - INACTIVE
+            - DISCONTINUED
+          example: "ACTIVE"
+        category:
+          $ref: "#/components/schemas/Category"
+        stock:
+          type: integer
+          minimum: 0
+          description: Unidades disponibles en inventario
+          example: 42
+        createdAt:
+          type: string
+          format: date-time
+          description: Fecha y hora de creación del producto
+        updatedAt:
+          type: string
+          format: date-time
+          description: Fecha y hora de la última modificación
+
+    ProductListResponse:
+      description: >
+        Respuesta paginada de productos.
+        Extiende PagedResponse de common-responses especializando el campo 'data'.
+      allOf:
+        - $ref: "https://dariocloudappi.github.io/common-schemas/v2/components/responses/CommonResponses.yaml#/components/schemas/PagedResponse"
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: "#/components/schemas/Product"
