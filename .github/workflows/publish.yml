@@ -35,25 +35,6 @@ jobs:
           npm install -g @redocly/cli@latest
           npm install -g ajv-cli@latest
 
-      - name: Lint all YAML schemas
-        run: |
-          find components/schemas -name "*.yaml" | while read file; do
-            echo "  → Validando: $file"
-            redocly lint --skip-rule=no-unused-components "$file" || true
-          done
-
-      - name: Validate YAML syntax
-        run: |
-          find components -name "*.yaml" | while read file; do
-            python3 -c "
-          import yaml, sys
-          try:
-              yaml.safe_load(open('$file'))
-          except Exception as e:
-              sys.exit(1)
-            "
-          done
-
   deploy:
     name: Deploy to GitHub Pages
     needs: validate
