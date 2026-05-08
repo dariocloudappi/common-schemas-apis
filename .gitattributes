@@ -1,0 +1,13 @@
+# Normalize all text files to UTF-8 LF in the repository
+* text=auto eol=lf
+
+# Explicitly mark YAML/JSON as UTF-8 text
+*.yaml text eol=lf working-tree-encoding=UTF-8
+*.yml  text eol=lf working-tree-encoding=UTF-8
+*.json text eol=lf working-tree-encoding=UTF-8
+*.md   text eol=lf working-tree-encoding=UTF-8
+
+# Binary files — no conversion
+*.png  binary
+*.jpg  binary
+*.ico  binary
