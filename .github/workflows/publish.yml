@@ -52,6 +52,14 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
+      - name: Add UTF-8 BOM to YAML files
+        run: |
+          find . -name "*.yaml" | while read file; do
+            if ! head -c 3 "$file" | grep -qP '^\xef\xbb\xbf'; then
+              printf '\xef\xbb\xbf' | cat - "$file" > /tmp/_bom && mv /tmp/_bom "$file"
+            fi
+          done
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
